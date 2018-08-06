@@ -4,6 +4,7 @@
   "description": "Search app using React",
   "main": "index.js",
   "scripts": {
+    "heroku-postbuild": "webpack --mode development",
     "start": "webpack-dev-server --mode development --open",
     "build": "webpack --mode production",
     "test": "echo \"Error: no test specified\" && exit 1"
