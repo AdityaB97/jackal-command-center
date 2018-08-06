@@ -2,6 +2,8 @@ import os
 import json
 from flask import Flask, render_template, request
 
+port = os.environ.get('PORT', '5000')
+
 template_dir = os.path.abspath('./src')
 app = Flask(__name__, template_folder=template_dir)
 
@@ -36,4 +38,4 @@ def get_position():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=port)
