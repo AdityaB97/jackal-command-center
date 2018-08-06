@@ -1,1 +1,2 @@
-web: node_modules/.bin/webpack --mode development --watch & python3 app.py
+web: python3 app.py
+worker: node_modules/.bin/webpack --mode development --watch
