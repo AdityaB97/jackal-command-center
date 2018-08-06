@@ -25,7 +25,8 @@ class Webpage extends React.Component {
   componentDidMount() {
     this.interval = setInterval(() => {
       var request = new XMLHttpRequest();
-      request.open('GET', 'http://' + window.location.host + '/get_position', false);
+      var host = location.protocol + '//' + window.location.host;
+      request.open('GET', host + '/get_position', false);
       request.send(null);
       this.setState({current_position: JSON.parse(request.responseText)})
     }, 80);
