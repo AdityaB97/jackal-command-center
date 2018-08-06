@@ -1,2 +1,1 @@
-transpile: node_modules/.bin/webpack --mode development --watch
-web: python3 app.py
+web: node_modules/.bin/webpack --mode development --watch & python3 app.py
