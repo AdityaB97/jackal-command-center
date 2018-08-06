@@ -10,7 +10,7 @@ module.exports = {
     "./src/index.js"
   ],
   output: {
-    path: __dirname + '/static',
+    path: './static',
     filename: "bundle.js"
   },
   module: {
