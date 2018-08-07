@@ -6,33 +6,40 @@ template_dir = os.path.abspath('./src')
 app = Flask(__name__, template_folder=template_dir)
 
 
-class GPS:
+class JackalData:
     def __init__(self):
         self.current_position = {
             'lat': 37.874747,
             'lng': -122.258753,
         }
+        self.past_positions = []
 
     def update_position(self, new_position):
+        self.past_positions.append(self.current_position)
+        if len(self.past_positions) > 200:
+            self.past_positions.pop(0)
         self.current_position = new_position
 
-gps = GPS()
+jackal = JackalData()
 
 
 @app.route('/', methods=['GET'])
-def hello_world():
-    return render_template('index.html', current_position=gps.current_position)
+def render():
+    return render_template('index.html', current_position=jackal.current_position)
 
 
 @app.route('/update_position', methods=['POST'])
 def update_position():
-    gps.update_position(json.loads(request.data))
+    jackal.update_position(json.loads(request.data))
     return 'Received!'
 
 
 @app.route('/get_position', methods=['GET'])
 def get_position():
-    return json.dumps(gps.current_position)
+    return json.dumps({
+        'current_position': jackal.current_position,
+        'past_positions': jackal.past_positions,
+    })
 
 
 if __name__ == '__main__':
