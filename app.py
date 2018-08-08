@@ -44,13 +44,13 @@ class JackalData:
         self.last_transmission_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def update_data(self, data):
-        self.past_positions.append(self.current_position)
-        if len(self.past_positions) > 200:
-            self.past_positions.pop(0)
-        
         self.current_position = self.process_navsat(data['/navsat/fix'])
         if not (self.current_position['lat'] == 'None' or self.current_position['lng'] == 'None'):
             self.last_recorded_position = self.current_position
+
+            self.past_positions.append(self.last_recorded_position)
+            if len(self.past_positions) > 200:
+                self.past_positions.pop(0)
         
         self.wifi_connected = data['/wifi_connected']['data']
         
