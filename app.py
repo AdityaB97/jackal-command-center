@@ -7,6 +7,7 @@ matplotlib.use('agg')
 import matplotlib.pyplot as plt
 from datetime import datetime
 import cv2
+import math
 
 template_dir = os.path.abspath('./src')
 app = Flask(__name__, template_folder=template_dir)
@@ -18,6 +19,7 @@ class JackalData:
             'lat': 37.874747,
             'lng': -122.258753,
         }
+        self.last_recorded_position = self.current_position
         self.past_positions = []
         self.wifi_connected = False
         self.collision = {
@@ -42,20 +44,25 @@ class JackalData:
         self.last_transmission_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def update_data(self, data):
-        
-        # Update current and past positions
         self.past_positions.append(self.current_position)
         if len(self.past_positions) > 200:
             self.past_positions.pop(0)
+        
         self.current_position = self.process_navsat(data['/navsat/fix'])
+        if not (self.current_position['lat'] == 'None' or self.current_position['lng'] == 'None'):
+            self.last_recorded_position = self.current_position
+        
         self.wifi_connected = data['/wifi_connected']['data']
+        
         self.collision = {
             'any': data['/collision/any']['data'],
             'close': data['/collision/close']['data'],
             'flipped': data['/collision/flipped']['data'],
             'stuck': data['/collision/stuck']['data'],
         }
+        
         self.odometry = self.process_odometry(data['/odometry/filtered'])
+        
         self.cmd_vel = self.process_cmd_vel(data['/cmd_vel'])
         
         old_image_url = self.current_image_url
@@ -72,8 +79,8 @@ class JackalData:
 
     def process_navsat(self, navsat):
         return {
-            'lat': navsat['latitude'],
-            'lng': navsat['longitude'],
+            'lat': navsat['latitude'] if not math.isnan(navsat['latitude']) else 'None',
+            'lng': navsat['longitude'] if not math.isnan(navsat['longitude']) else 'None',
         }
 
     def process_odometry(self, odometry):
@@ -98,6 +105,7 @@ class JackalData:
             'cmd_vel': self.cmd_vel,
             'current_image_url': self.current_image_url,
             'last_transmission_time': self.last_transmission_time,
+            'last_recorded_position': self.last_recorded_position,
         }
         if use_json:
             return json.dumps(dict_to_return)

@@ -11,7 +11,7 @@ const MapComponent = withScriptjs(withGoogleMap((props) =>
     defaultZoom={20}
     defaultCenter={{ lat: 37.874609, lng: -122.258330 }}
   >
-    {props.isMarkerShown && <Marker position={props.current_position} />}
+    {props.isMarkerShown && <Marker position={props.last_recorded_position} />}
     {props.isPastShown && <Polyline 
       path={props.past_positions}
       options={{ 
@@ -43,6 +43,7 @@ class Webpage extends React.Component {
       cmd_vel: this.props.initial_data.cmd_vel,
       current_image_url: this.props.initial_data.current_image_url,
       last_transmission_time: this.props.initial_data.last_transmission_time,
+      last_recorded_position: this.props.initial_data.last_recorded_position,
       isPastShown: true,
       mapTypeId: 'roadmap',
       time: Date.now(),
@@ -86,7 +87,7 @@ class Webpage extends React.Component {
             <div style={{border: '5px solid pink'}}>
               <MapComponent
                 isMarkerShown
-                current_position={this.state.current_position}
+                last_recorded_position={this.state.last_recorded_position}
                 past_positions={this.state.past_positions}
                 isPastShown={this.state.isPastShown}
                 mapTypeId={this.state.mapTypeId}
@@ -118,6 +119,12 @@ class Webpage extends React.Component {
                 <p>Last transmission time: <font color='blue'>{this.state.last_transmission_time}</font></p>
                 <ul style={{display: 'inline-block'}}>
                   <li>/wifi_connected: {this.state.wifi_connected ? <font color='#32CD32'>True</font> : <font color='red'>False</font>} </li>
+                  <li>/navsat/fix
+                    <ul>
+                      <li>latitude: <font color='blue'>{this.state.current_position.lat}</font></li>
+                      <li>longitude: <font color='blue'>{this.state.current_position.lng}</font></li>
+                    </ul>
+                  </li>
                   <li>/collision
                     <ul>
                       <li>/collision/any: {this.state.collision.any ? <font color='#32CD32'>True</font> : <font color='red'>False</font>}</li>
