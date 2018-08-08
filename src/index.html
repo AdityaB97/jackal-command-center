@@ -10,7 +10,7 @@
 <body>
   <section id="index"></section>
 <script>
-  var current_position = JSON.parse('{{ current_position|tojson }}')
+  var initial_data = JSON.parse('{{ initial_data|tojson }}');
 </script>
 <script type="text/javascript" src="{{ url_for('static', filename='bundle.js') }}"></script>
 </body>

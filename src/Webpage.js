@@ -9,7 +9,7 @@ const MapComponent = withScriptjs(withGoogleMap((props) =>
   <GoogleMap
     mapTypeId={props.mapTypeId}
     defaultZoom={20}
-    defaultCenter={{ lat: 37.874747, lng: -122.258753 }}
+    defaultCenter={{ lat: 37.874609, lng: -122.258330 }}
   >
     {props.isMarkerShown && <Marker position={props.current_position} />}
     {props.isPastShown && <Polyline 
@@ -33,9 +33,16 @@ const MapComponent = withScriptjs(withGoogleMap((props) =>
 class Webpage extends React.Component {
   constructor(props) {
     super(props);
+    
     this.state = {
-      current_position: this.props.current_position,
-      past_positions: [],
+      current_position: this.props.initial_data.current_position,
+      past_positions: this.props.initial_data.past_positions,
+      wifi_connected: this.props.initial_data.past_positions,
+      collision: this.props.initial_data.collision,
+      odometry: this.props.initial_data.odometry,
+      cmd_vel: this.props.initial_data.cmd_vel,
+      current_image_url: this.props.initial_data.current_image_url,
+      last_transmission_time: this.props.initial_data.last_transmission_time,
       isPastShown: true,
       mapTypeId: 'roadmap',
       time: Date.now(),
@@ -45,7 +52,7 @@ class Webpage extends React.Component {
   retrieveData() {
     var request = new XMLHttpRequest();
     var host = location.protocol + '//' + window.location.host;
-    request.open('GET', host + '/get_position', false);
+    request.open('GET', host + '/get_data', false);
     request.send(null);
     return JSON.parse(request.responseText)
   }
@@ -103,6 +110,35 @@ class Webpage extends React.Component {
                   <button type='button' className={'btn btn-secondary' + (this.state.mapTypeId == 'satellite' ? ' active' : '')} onClick={() => this.mapTypeIdHandler('satellite')()}>Satellite</button>
                   <button type='button' className={'btn btn-secondary' + (this.state.mapTypeId == 'hybrid' ? ' active' : '')} onClick={() => this.mapTypeIdHandler('hybrid')()}>Hybrid</button>
                 </div>
+              </div>
+            </div>
+            <div style={{margin: '100px 0'}}>
+              <img src={this.state.current_image_url} alt={'Current Image'} style={{verticalAlign: 'top', margin: '0 100px 0 0', border: '5px solid pink'}}/>
+              <div style={{display: 'inline-block'}}>
+                <p>Last transmission time: <font color='blue'>{this.state.last_transmission_time}</font></p>
+                <ul style={{display: 'inline-block'}}>
+                  <li>/wifi_connected: {this.state.wifi_connected ? <font color='#32CD32'>True</font> : <font color='red'>False</font>} </li>
+                  <li>/collision
+                    <ul>
+                      <li>/collision/any: {this.state.collision.any ? <font color='#32CD32'>True</font> : <font color='red'>False</font>}</li>
+                      <li>/collision/close: {this.state.collision.close ? <font color='#32CD32'>True</font> : <font color='red'>False</font>}</li>
+                      <li>/collision/flipped: {this.state.collision.flipped ? <font color='#32CD32'>True</font> : <font color='red'>False</font>}</li>
+                      <li>/collision/stuck: {this.state.collision.stuck ? <font color='#32CD32'>True</font> : <font color='red'>False</font>}</li>
+                    </ul>
+                  </li>
+                  <li>/odometry
+                    <ul>
+                      <li>linear: <font color='blue'>{this.state.odometry.linear}</font></li>
+                      <li>angular: <font color='blue'>{this.state.odometry.angular}</font></li>
+                    </ul>
+                  </li>
+                  <li>/cmd_vel
+                    <ul>
+                      <li>linear: <font color='blue'>{this.state.cmd_vel.linear}</font></li>
+                      <li>angular: <font color='blue'>{this.state.cmd_vel.angular}</font></li>
+                    </ul>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
