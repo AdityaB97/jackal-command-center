@@ -3,6 +3,7 @@ import json
 from flask import Flask, render_template, request
 import numpy as np
 import matplotlib.pyplot as plt
+matplotlib.use('Agg')
 from datetime import datetime
 import cv2
 
