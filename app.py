@@ -43,6 +43,8 @@ class JackalData:
 
         self.last_transmission_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+        self.ip_address = 'Unknown'
+
     def update_data(self, data):
         self.current_position = self.process_navsat(data['/navsat/fix'])
         if not (self.current_position['lat'] == 'None' or self.current_position['lng'] == 'None'):
