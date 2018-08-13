@@ -44,6 +44,7 @@ class Webpage extends React.Component {
       current_image_url: this.props.initial_data.current_image_url,
       last_transmission_time: this.props.initial_data.last_transmission_time,
       last_recorded_position: this.props.initial_data.last_recorded_position,
+      ip_address: this.props.initial_data.ip_address,
       isPastShown: true,
       mapTypeId: 'roadmap',
       time: Date.now(),
@@ -117,6 +118,7 @@ class Webpage extends React.Component {
               <img src={this.state.current_image_url} alt={'Current Image'} style={{verticalAlign: 'top', margin: '0 100px 0 0', border: '5px solid pink'}}/>
               <div style={{display: 'inline-block'}}>
                 <p>Last transmission time: <font color='blue'>{this.state.last_transmission_time}</font></p>
+                <p>IP address: <font color='blue'>{this.state.ip_address}</font></p>
                 <ul style={{display: 'inline-block'}}>
                   <li>/wifi_connected: {this.state.wifi_connected ? <font color='#32CD32'>True</font> : <font color='red'>False</font>} </li>
                   <li>/navsat/fix

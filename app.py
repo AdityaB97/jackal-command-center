@@ -77,6 +77,8 @@ class JackalData:
 
         self.last_transmission_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+        self.ip_address = data['ip_address']
+
     def process_navsat(self, navsat):
         return {
             'lat': navsat['latitude'] if not math.isnan(navsat['latitude']) else 'None',
@@ -106,6 +108,7 @@ class JackalData:
             'current_image_url': self.current_image_url,
             'last_transmission_time': self.last_transmission_time,
             'last_recorded_position': self.last_recorded_position,
+            'ip_address': self.ip_address,
         }
         if use_json:
             return json.dumps(dict_to_return)
