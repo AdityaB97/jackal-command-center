@@ -4,6 +4,32 @@ import './bootstrap.css';
 import './style.css';
 import Toggle from 'react-toggle'
 
+function convertGeofenceFormat(coords) {
+  return coords.map(coord => ({
+    lat: coord[0],
+    lng: coord[1],
+  }))
+}
+
+// var geofenceCoordinates = [
+//   [37.915520, -122.334836],
+//   [37.915282, -122.333973],
+//   [37.914278, -122.334377],
+//   [37.914555, -122.335299],
+//   [37.915520, -122.334836],
+// ]
+
+var geofenceCoordinates = [
+  [37.874712, -122.258581],
+  [37.874567, -122.258531],
+  [37.874616, -122.258306],
+  [37.874763, -122.258354],
+  [37.874712, -122.258581],
+]
+
+
+var geofence = convertGeofenceFormat(geofenceCoordinates)
+
 
 const MapComponent = withScriptjs(withGoogleMap((props) =>
   <GoogleMap
@@ -26,6 +52,19 @@ const MapComponent = withScriptjs(withGoogleMap((props) =>
       }}
       />
     }
+    <Polyline 
+      path={geofence}
+      options={{ 
+        strokeColor: '#32CD32',
+        strokeOpacity: '1.0',
+        strokeWeight: 2,
+        icons: [{ 
+          icon: "hello",
+          offset: '0',
+          repeat: '10px'
+        }],
+      }}
+      />
   </GoogleMap>
 ))
 
